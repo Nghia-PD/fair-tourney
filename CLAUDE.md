@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fair-Tourney is a tournament management application consisting of a React/TypeScript participant-facing web app and an ASP.NET Core 10 backend API. Both are in early development — the current code is mostly scaffold/template.
+Fair-Tourney is a participant tournament management application consisting of a React/TypeScript participant-facing web app and an ASP.NET Core 10 backend API. Both are in early development — the current code is mostly scaffold/template.
 
 ## Commands
 
