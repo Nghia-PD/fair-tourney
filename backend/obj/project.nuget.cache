@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "aEJ3MaUg9SA=",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\fair-tourney\\backend\\backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nghia\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "C:\\Users\\Nghia\\.nuget\\packages\\microsoft.openapi\\3.5.4\\microsoft.openapi.3.5.4.nupkg.sha512"
+  ],
+  "logs": []
+}
