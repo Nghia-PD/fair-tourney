@@ -20,12 +20,12 @@ npm run preview   # Preview production build locally
 ### Backend (`backend/`)
 
 ```bash
-dotnet run        # Start the API server
-dotnet build      # Build the project
-dotnet watch      # Run with file watching (hot reload)
+dotnet build                          # Build the whole solution (backend.slnx)
+dotnet run --project src/Api          # Start the API server
+dotnet watch --project src/Api        # Run with file watching (hot reload)
 ```
 
-The backend runs on `http://localhost:5128` (http profile) or `https://localhost:7214` (https profile), as defined in `backend/Properties/launchSettings.json`.
+The backend runs on `http://localhost:5128` (http profile) or `https://localhost:7214` (https profile), as defined in `backend/src/Api/Properties/launchSettings.json`.
 
 ## Architecture
 
@@ -33,6 +33,11 @@ The backend runs on `http://localhost:5128` (http profile) or `https://localhost
 
 - `participant-web-app/` — React 19 + TypeScript + Vite. Entry: `src/main.tsx` → `src/App.tsx`. Uses Rolldown bundler via Vite. TypeScript is strict (`noUnusedLocals`, `noUnusedParameters`).
 
-- `backend/` — ASP.NET Core 10 Web API. Entry: `Program.cs`. Controller-per-resource pattern under `Controllers/`. OpenAPI docs are enabled in Development only. Nullable reference types and implicit usings are on.
+- `backend/` — ASP.NET Core 10 Web API using Clean Architecture: one project per layer under `src/`, grouped by `backend.slnx`. Nullable reference types and implicit usings are on.
+  - `src/Api` — presentation/startup project. Entry: `Program.cs`; holds appsettings, launch settings and controllers (controller-per-resource under `Controllers/`). OpenAPI docs are enabled in Development only. References Application and Infrastructure.
+  - `src/Application` — use cases and interfaces (e.g. repository abstractions). References Domain only.
+  - `src/Domain` — entities and business rules. References nothing.
+  - `src/Infrastructure` — implementations of Application interfaces (persistence, external services). References Application.
+  - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); put EF Core and other infra packages only in Infrastructure.
 
 There is no API proxy configured between the frontend and backend yet — they are developed and run independently.
