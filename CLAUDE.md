@@ -23,6 +23,8 @@ npm run preview   # Preview production build locally
 dotnet build                          # Build the whole solution (backend.slnx)
 dotnet run --project src/Api          # Start the API server
 dotnet watch --project src/Api        # Run with file watching (hot reload)
+docker compose up --build             # Build image and run API in Docker at http://localhost:5128
+docker build -t fair-tourney-api .    # Build image only
 ```
 
 The backend runs on `http://localhost:5128` (http profile) or `https://localhost:7214` (https profile), as defined in `backend/src/Api/Properties/launchSettings.json`.
