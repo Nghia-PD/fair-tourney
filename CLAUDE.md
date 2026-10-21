@@ -35,11 +35,16 @@ The backend runs on `http://localhost:5128` (http profile) or `https://localhost
 
 - `participant-web-app/` — React 19 + TypeScript + Vite. Entry: `src/main.tsx` → `src/App.tsx`. Uses Rolldown bundler via Vite. TypeScript is strict (`noUnusedLocals`, `noUnusedParameters`).
 
-- `backend/` — ASP.NET Core 10 Web API using Clean Architecture: one project per layer under `src/`, grouped by `backend.slnx`. Nullable reference types and implicit usings are on.
-  - `src/Api` — presentation/startup project. Entry: `Program.cs`; holds appsettings, launch settings and controllers (controller-per-resource under `Controllers/`). OpenAPI docs are enabled in Development only. References Application and Infrastructure.
-  - `src/Application` — use cases and interfaces (e.g. repository abstractions). References Domain only.
-  - `src/Domain` — entities and business rules. References nothing.
-  - `src/Infrastructure` — implementations of Application interfaces (persistence, external services). References Application.
-  - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); put EF Core and other infra packages only in Infrastructure.
+- `backend/` — ASP.NET Core 10 Web API using Clean Architecture and CQRS pattern: one project per layer under `src/`, grouped by `backend.slnx`. Nullable reference types and implicit usings are on.
+    - `src/Api` — presentation/startup project. Entry: `Program.cs`; holds appsettings, launch settings and controllers (controller-per-resource under `Controllers/`). OpenAPI docs are enabled in Development only. References Application and Infrastructure.
+    - `src/Application` — use cases and interfaces (e.g. repository abstractions). References Domain only.
+    - `src/Domain` — entities and business rules. References nothing.
+    - `src/Infrastructure` — implementations of Application interfaces (persistence, external services). References Application.
+    - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); put EF Core and other infra packages only in Infrastructure.
+    - **Reference template:** the backend follows [jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture). When deciding where a new file goes, how it is named or how a concern (exceptions, interfaces, validation, DI) is handled, match that repo's conventions. Exception: this project uses MVC controllers in `src/Api/Controllers/`, not the template's Minimal API endpoint groups. It also does not use MediatR: controllers inject command/query handler classes directly, and each handler runs its FluentValidation validator itself (throwing `Application.Common.Exceptions.ValidationException`).
+
+## Dependencies
+
+This is a side project: prefer free, open-source packages. Avoid libraries that need a paid or commercial licence, or pin to the last open-source version (e.g. MediatR 12.5.0 — v13+ is commercially licensed; AutoMapper 14.x — v15+ is commercial). Flag licensing before adding any new dependency.
 
 There is no API proxy configured between the frontend and backend yet — they are developed and run independently.
