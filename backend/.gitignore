@@ -2,3 +2,6 @@ bin/
 obj/
 .vs/
 *.user
+
+# Local sample recordings for manual API testing
+*.webm

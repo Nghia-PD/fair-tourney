@@ -1,3 +1,4 @@
+using Api.ExceptionHandlers;
 using Application;
 using Infrastructure;
 
@@ -7,11 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
