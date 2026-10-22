@@ -15,8 +15,9 @@ public class UploadRecordingChunkCommandValidator : AbstractValidator<UploadReco
             .WithMessage("File must not be empty.");
 
         RuleFor(v => v.ContentType)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .Must(ct => ct.StartsWith("video/"))
-            .WithMessage("File must be a video.");
+            .Must(ct => RecordingContentTypes.GetExtension(ct) is not null)
+            .WithMessage("File must be a WebM or MP4 video.");
     }
 }

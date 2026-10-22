@@ -19,7 +19,7 @@ public class RecordingsController : ControllerBase
     {
         await using var content = file.OpenReadStream();
 
-        var key = await handler.Handle(new UploadRecordingChunkCommand
+        await handler.Handle(new UploadRecordingChunkCommand
         {
             SessionId = sessionId,
             ChunkIndex = chunkIndex,
@@ -28,6 +28,6 @@ public class RecordingsController : ControllerBase
             Length = file.Length
         }, cancellationToken);
 
-        return StatusCode(StatusCodes.Status201Created, new { key });
+        return StatusCode(StatusCodes.Status201Created, new { sessionId, chunkIndex });
     }
 }

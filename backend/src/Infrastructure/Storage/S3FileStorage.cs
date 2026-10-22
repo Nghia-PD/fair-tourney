@@ -16,8 +16,7 @@ public class S3FileStorage : IFileStorage
         _options = options.Value;
     }
 
-    public async Task UploadAsync(string key, Stream content, string contentType, CancellationToken
-cancellationToken)
+    public async Task UploadAsync(string key, Stream content, string contentType, CancellationToken cancellationToken)
     {
         var request = new PutObjectRequest
         {

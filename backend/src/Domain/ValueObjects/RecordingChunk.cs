@@ -20,8 +20,5 @@ public sealed record RecordingChunk
 
         SessionId = sessionId;
         ChunkIndex = chunkIndex;
-
     }
-
-    public string StorageKey => $"recordings/{SessionId}/chunk_{ChunkIndex:D4}.webm";
 }
