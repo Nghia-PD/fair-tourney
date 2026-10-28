@@ -1,6 +1,6 @@
 @Api_HostAddress = http://localhost:5128
 
-### Upload a recording chunk (place a sample.webm next to this file)
+### Upload a recording chunk (sample video lives in ./samples)
 POST {{Api_HostAddress}}/recordings/3f2b8c1e-0000-4000-8000-000000000001/chunks
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -9,10 +9,10 @@ Content-Disposition: form-data; name="chunkIndex"
 
 0
 --boundary
-Content-Disposition: form-data; name="file"; filename="sample.webm"
-Content-Type: video/webm
+Content-Disposition: form-data; name="file"; filename="19600-303877318_medium.mp4"
+Content-Type: video/mp4
 
-< ./sample.webm
+< ./samples/19600-303877318_medium.mp4
 --boundary--
 
 ###
