@@ -23,6 +23,13 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
                 Title = "The recording chunk is invalid.",
                 Detail = e.Message
             }),
+            ConflictException e => (StatusCodes.Status409Conflict, new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+                Title = "The resource already exists.",
+                Detail = e.Message
+            }),
             _ => (-1, null)
         };
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted. The overwrite-on-retry behaviour and the extension in the key are superseded by [ADR-002](ADR-002-Write-Once-Upload-Chunks.md).
 
 ## Date
 

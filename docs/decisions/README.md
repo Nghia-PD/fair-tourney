@@ -4,4 +4,5 @@ This folder records the significant architectural decisions made for Fair-Tourne
 
 | ADR | Title | Date | Status |
 |-----|-------|------|--------|
-| [ADR-001](ADR-001-Client-Assigned-Sequential-Chunk-Index.md) | Client-Assigned Sequential Chunk Index | 2026-10-28 | Accepted |
+| [ADR-001](ADR-001-Client-Assigned-Sequential-Chunk-Index.md) | Client-Assigned Sequential Chunk Index | 2026-10-28 | Accepted (partly superseded by ADR-002) |
+| [ADR-002](ADR-002-Write-Once-Upload-Chunks.md) | Write-Once Upload Chunks | 2026-10-30 | Accepted |

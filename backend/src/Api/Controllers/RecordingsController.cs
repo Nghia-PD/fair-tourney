@@ -19,7 +19,7 @@ public class RecordingsController : ControllerBase
     {
         await using var content = file.OpenReadStream();
 
-        await handler.Handle(new UploadRecordingChunkCommand
+        var created = await handler.Handle(new UploadRecordingChunkCommand
         {
             SessionId = sessionId,
             ChunkIndex = chunkIndex,
@@ -28,6 +28,7 @@ public class RecordingsController : ControllerBase
             Length = file.Length
         }, cancellationToken);
 
-        return StatusCode(StatusCodes.Status201Created, new { sessionId, chunkIndex });
+        // An identical retry of an already stored chunk is idempotent: 200 instead of 201.
+        return StatusCode(created ? StatusCodes.Status201Created : StatusCodes.Status200OK, new { sessionId, chunkIndex });
     }
 }
