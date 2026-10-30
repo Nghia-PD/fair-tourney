@@ -1,4 +1,4 @@
-@Api_HostAddress = http://localhost:5128
+@Api_HostAddress = https://localhost:7214
 
 ### Upload a recording chunk (sample video lives in ./samples)
 POST {{Api_HostAddress}}/recordings/3f2b8c1e-0000-4000-8000-000000000001/chunks
@@ -13,6 +13,23 @@ Content-Disposition: form-data; name="file"; filename="19600-303877318_medium.mp
 Content-Type: video/mp4
 
 < ./samples/19600-303877318_medium.mp4
+--boundary--
+
+###
+
+### Upload a screenshot chunk (sample video lives in ./samples)
+POST {{Api_HostAddress}}/screenshots/3f2b8c1e-0000-4000-8000-000000000001/chunks
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="chunkIndex"
+
+1
+--boundary
+Content-Disposition: form-data; name="file"; filename="Screenshot 2026-10-30 125725.png"
+Content-Type: image/png
+
+< ./samples/Screenshot 2026-10-30 125725.png
 --boundary--
 
 ###

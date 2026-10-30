@@ -1,5 +1,6 @@
 using System.Reflection;
 using Application.Recordings.Commands.UploadRecordingChunk;
+using Application.Screenshots.Commands.UploadScreenshotChunk;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -11,6 +12,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<UploadRecordingChunkCommandHandler>();
+        services.AddScoped<UploadScreenshotChunkCommandHandler>();
 
         return services;
     }
