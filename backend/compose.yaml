@@ -1,11 +1,12 @@
 services:
     floci:
-        image: floci/floci:latest # pin to a specific version once it works
+        image: floci/floci:latest-compat
         container_name: floci
         ports:
             - "127.0.0.1:4566:4566"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+            - ./floci/init/ready.d:/etc/floci/init/ready.d:ro
     api:
         build: .
         ports:
