@@ -8,8 +8,9 @@
   "profile": "",
   "region": "",
   "configuration": "Release",
+  "function-architecture": "x86_64",
   "function-runtime": "dotnet10",
   "function-memory-size": 512,
-  "function-timeout": 60,
-  "function-handler": "Functions::Functions.Screenshots.ProcessScreenshotChunkFunction::FunctionHandler"
+  "function-timeout": 30,
+  "function-handler": "MyFunction::MyFunction.Function::FunctionHandler"
 }
