@@ -17,7 +17,7 @@ else
   ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
   aws lambda create-function --function-name "$FUNCTION" \
     --runtime dotnet10 \
-    --handler Functions::Functions.Screenshots.ProcessScreenshotChunkFunction::FunctionHandler \
+    --handler Screeenshots::Functions.Screenshots.ProcessScreenshotChunkFunction::FunctionHandler \
     --role "arn:aws:iam::$ACCOUNT:role/lambda" \
     --memory-size 512 \
     --timeout "$LAMBDA_TIMEOUT" \
