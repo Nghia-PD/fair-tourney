@@ -9,7 +9,7 @@ public class ScreenshotsController : ControllerBase
 {
     [HttpPost("{sessionId:guid}/chunks")]
     [Consumes("multipart/form-data")]
-    [RequestSizeLimit(10 * 1024 * 1024)] //10 mb limit
+    [RequestSizeLimit(5 * 1024 * 1024)] //5 mb limit
 
     public async Task<IActionResult> UploadChunk(
         [FromServices] UploadScreenshotChunkCommandHandler handler,
