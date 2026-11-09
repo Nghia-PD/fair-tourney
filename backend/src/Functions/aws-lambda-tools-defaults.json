@@ -10,6 +10,6 @@
   "configuration": "Release",
   "function-runtime": "dotnet10",
   "function-memory-size": 512,
-  "function-timeout": 30,
+  "function-timeout": 60,
   "function-handler": "Functions::Functions.Screenshots.ProcessScreenshotChunkFunction::FunctionHandler"
 }

@@ -14,5 +14,7 @@
     <PackageReference Include="Amazon.Lambda.Core" Version="2.8.1" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.5" />
     <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.2.1" />
+    <PackageReference Include="AWSSDK.BedrockRuntime" Version="4.0.101.16" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.104.5" />
   </ItemGroup>
 </Project>
