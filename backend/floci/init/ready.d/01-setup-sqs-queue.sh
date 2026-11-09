@@ -10,6 +10,6 @@ QUEUE_ARN=$(aws sqs get-queue-attributes --queue-url "$QUEUE_URL" \
 
 # Lets S3 send to this queue. The bucket ARN is only a string here, so the bucket need not exist yet.
 cat > /tmp/queue-attributes.json <<EOF
-{"Policy":"{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sqs:SendMessage\",\"Resource\":\"$QUEUE_ARN\",\"Condition\":{\"ArnEquals\":{\"aws:SourceArn\":\"arn:aws:s3:::$BUCKET\"},\"StringEquals\":{\"aws:SourceAccount\":\"$ACCOUNT\"}}}]}"}
+{"VisibilityTimeout":"$VISIBILITY_TIMEOUT","Policy":"{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sqs:SendMessage\",\"Resource\":\"$QUEUE_ARN\",\"Condition\":{\"ArnEquals\":{\"aws:SourceArn\":\"arn:aws:s3:::$BUCKET\"},\"StringEquals\":{\"aws:SourceAccount\":\"$ACCOUNT\"}}}]}"}
 EOF
 aws sqs set-queue-attributes --queue-url "$QUEUE_URL" --attributes file:///tmp/queue-attributes.json
