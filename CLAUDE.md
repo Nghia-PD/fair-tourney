@@ -43,6 +43,16 @@ The backend runs on `http://localhost:5128` (http profile) or `https://localhost
     - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); put EF Core and other infra packages only in Infrastructure.
     - **Reference template:** the backend follows [jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture). When deciding where a new file goes, how it is named or how a concern (exceptions, interfaces, validation, DI) is handled, match that repo's conventions. Exception: this project uses MVC controllers in `src/Api/Controllers/`, not the template's Minimal API endpoint groups, and puts web-layer exception handlers in `src/Api/ExceptionHandlers/` (not an `Infrastructure/` folder, which would be confused with the Infrastructure project). It also does not use MediatR: controllers inject command/query handler classes directly into each action with `[FromServices]` (no constructor injection of handlers). Every action parameter gets an explicit binding-source attribute (`[FromServices]`, `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromBody]`, `[FromHeader]`) rather than relying on `[ApiController]` inference; only `CancellationToken` has none. Each handler runs its FluentValidation validator itself (throwing `Application.Common.Exceptions.ValidationException`).
 
+## Copied Code Attribution
+
+If a file is copied or adapted from a reputable source (e.g. Microsoft Learn docs, the reference template repo, official library docs), its first line must be a comment naming the source URL and roughly how much of the file was copied, e.g.:
+
+```csharp
+// Source: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling — ~80% copied
+```
+
+Use the file's own comment syntax (`//`, `#`, `<!-- -->`). Update the percentage if the file later diverges significantly from the source.
+
 ## Dependencies
 
 This is a side project: prefer free, open-source packages. Avoid libraries that need a paid or commercial licence, or pin to the last open-source version (e.g. MediatR 12.5.0 — v13+ is commercially licensed; AutoMapper 14.x — v15+ is commercial). Flag licensing before adding any new dependency.
