@@ -2,7 +2,11 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Application.Common.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Data.Interceptors;
 using Infrastructure.Storage;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -13,6 +17,25 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        // Database setup follows https://github.com/jasontaylordev/CleanArchitecture/blob/main/src/Infrastructure/DependencyInjection.cs
+        var connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        {
+            options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+            options.UseNpgsql(connectionString)
+                .UseSnakeCaseNamingConvention();
+        });
+
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        services.AddScoped<ApplicationDbContextInitialiser>();
+
+        services.AddSingleton(TimeProvider.System);
+
         services.Configure<S3StorageOptions>(configuration.GetSection(S3StorageOptions.SectionName));
 
         services.AddSingleton<IAmazonS3>(sp =>

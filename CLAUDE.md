@@ -25,7 +25,13 @@ dotnet run --project src/Api          # Start the API server
 dotnet watch --project src/Api        # Run with file watching (hot reload)
 docker compose up --build             # Build image and run API in Docker at http://localhost:5128
 docker build -t fair-tourney-api .    # Build image only
+docker compose up -d postgres         # Start only the local PostgreSQL database
+
+# Add an EF Core migration (needs: dotnet tool install --global dotnet-ef)
+dotnet ef migrations add <Name> --project src/Infrastructure --startup-project src/Api --output-dir Data/Migrations
 ```
+
+In Development the API applies pending migrations at startup (`InitialiseDatabaseAsync()` in `Program.cs`). The connection string is `ConnectionStrings:DefaultConnection`.
 
 The backend runs on `http://localhost:5128` (http profile) or `https://localhost:7214` (https profile), as defined in `backend/src/Api/Properties/launchSettings.json`.
 
@@ -40,7 +46,7 @@ The backend runs on `http://localhost:5128` (http profile) or `https://localhost
     - `src/Application` — use cases and interfaces (e.g. repository abstractions). References Domain only.
     - `src/Domain` — entities and business rules. References nothing.
     - `src/Infrastructure` — implementations of Application interfaces (persistence, external services). References Application.
-    - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); put EF Core and other infra packages only in Infrastructure.
+    - Each of Application and Infrastructure exposes a `DependencyInjection.cs` extension (`AddApplication()`, `AddInfrastructure(configuration)`) called from `Program.cs`. Never add references that point outward (e.g. Application → Infrastructure); the EF Core abstractions (`Microsoft.EntityFrameworkCore`) may be referenced by Application so `IApplicationDbContext` can expose `DbSet<T>` (as in the reference template), but database providers (Npgsql), migrations tooling and other infra packages go only in Infrastructure (or Api for design-time tooling).
     - **Reference template:** the backend follows [jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture). When deciding where a new file goes, how it is named or how a concern (exceptions, interfaces, validation, DI) is handled, match that repo's conventions. Exception: this project uses MVC controllers in `src/Api/Controllers/`, not the template's Minimal API endpoint groups, and puts web-layer exception handlers in `src/Api/ExceptionHandlers/` (not an `Infrastructure/` folder, which would be confused with the Infrastructure project). It also does not use MediatR: controllers inject command/query handler classes directly into each action with `[FromServices]` (no constructor injection of handlers). Every action parameter gets an explicit binding-source attribute (`[FromServices]`, `[FromRoute]`, `[FromQuery]`, `[FromForm]`, `[FromBody]`, `[FromHeader]`) rather than relying on `[ApiController]` inference; only `CancellationToken` has none. Each handler runs its FluentValidation validator itself (throwing `Application.Common.Exceptions.ValidationException`).
 
 ## Copied Code Attribution
@@ -52,6 +58,14 @@ If a file is copied or adapted from a reputable source (e.g. Microsoft Learn doc
 ```
 
 Use the file's own comment syntax (`//`, `#`, `<!-- -->`). Update the percentage if the file later diverges significantly from the source.
+
+The reference template repo ([jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture)) counts as a reputable source. Any file copied or adapted from it must carry the header, pointing at the exact file in that repo, e.g.:
+
+```csharp
+// Source: https://github.com/jasontaylordev/CleanArchitecture/blob/main/src/Infrastructure/Data/Interceptors/AuditableEntityInterceptor.cs — ~70% copied
+```
+
+If the template file itself credits an upstream source (e.g. a "Learn more" link to Microsoft docs), keep that credit as well.
 
 ## Dependencies
 

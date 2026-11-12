@@ -1,4 +1,20 @@
 services:
+    postgres:
+        image: postgres:18
+        container_name: postgres
+        environment:
+            - POSTGRES_DB=fair_tourney
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            - "127.0.0.1:5433:5432"  # 5433 on the host: a native PostgreSQL may already own 5432
+        volumes:
+            - postgres-data:/var/lib/postgresql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres -d fair_tourney"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
     floci:
         image: floci/floci:latest-compat
         container_name: floci
@@ -19,6 +35,12 @@ services:
             - Storage__S3__ServiceUrl=http://floci:4566
             - AWS_ACCESS_KEY_ID=test
             - AWS_SECRET_ACCESS_KEY=test
+            - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=fair_tourney;Username=postgres;Password=postgres
         depends_on:
             floci:
                 condition: service_healthy
+            postgres:
+                condition: service_healthy
+
+volumes:
+    postgres-data:
