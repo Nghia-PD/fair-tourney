@@ -1,4 +1,6 @@
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.ValueObjects;
 using ValidationException = Application.Common.Exceptions.ValidationException;
 
@@ -24,16 +26,24 @@ public class UploadRecordingChunkCommandHandler
         _fileStorage = fileStorage;
     }
 
-    public async Task Handle(UploadRecordingChunkCommand request, CancellationToken cancellationToken)
+    /// <returns><c>true</c> if the chunk was stored; <c>false</c> if an identical chunk was already stored (a retry).</returns>
+    public async Task<bool> Handle(UploadRecordingChunkCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
         var chunk = new RecordingChunk(request.SessionId, request.ChunkIndex);
-        var extension = RecordingContentTypes.GetExtension(request.ContentType)!;
-        var key = $"recordings/{chunk.SessionId}/chunk_{chunk.ChunkIndex:D4}.{extension}";
+        // No extension in the key: one index maps to exactly one object whatever the video format; the type lives in Content-Type.
+        var key = $"recordings/{chunk.SessionId}/chunk_{chunk.ChunkIndex:D4}";
 
-        await _fileStorage.UploadAsync(key, request.Content, request.ContentType, cancellationToken);
+        var result = await _fileStorage.UploadIfNotExistsAsync(key, request.Content, request.ContentType, cancellationToken);
+
+        return result switch
+        {
+            WriteOnceUploadResult.Created => true,
+            WriteOnceUploadResult.AlreadyExistsWithSameContent => false,
+            _ => throw new ConflictException($"Chunk {chunk.ChunkIndex} of session {chunk.SessionId} has already been uploaded with different content.")
+        };
     }
 }

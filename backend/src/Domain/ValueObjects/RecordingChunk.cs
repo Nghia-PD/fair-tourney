@@ -1,8 +1,6 @@
-using Domain.Exceptions;
-
 namespace Domain.ValueObjects;
 
-public sealed record RecordingChunk
+public class RecordingChunk : ValueObject
 {
     public Guid SessionId { get; }
     public int ChunkIndex { get; }
@@ -20,5 +18,11 @@ public sealed record RecordingChunk
 
         SessionId = sessionId;
         ChunkIndex = chunkIndex;
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return SessionId;
+        yield return ChunkIndex;
     }
 }

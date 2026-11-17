@@ -5,3 +5,5 @@ obj/
 
 # Local sample recordings for manual API testing
 *.webm
+floci/artifacts/functions.zip
+src/Functions/MyFunction/artifacts/
