@@ -11,5 +11,5 @@
     "function-runtime": "dotnet10",
     "function-memory-size": 512,
     "function-timeout": 60,
-    "function-handler": "Screenshots::Functions.Screenshots.ProcessScreenshotChunkFunction::FunctionHandler"
+    "function-handler": "Screenshots::Screenshots.ProcessScreenshotChunkFunction::FunctionHandler"
 }
