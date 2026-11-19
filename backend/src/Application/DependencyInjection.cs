@@ -1,4 +1,5 @@
 using System.Reflection;
+using Application.AnalyzeResults.Commands.CreateAnalyzeResult;
 using Application.Recordings.Commands.UploadRecordingChunk;
 using Application.Screenshots.Commands.UploadScreenshotChunk;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class DependencyInjection
 
         services.AddScoped<UploadRecordingChunkCommandHandler>();
         services.AddScoped<UploadScreenshotChunkCommandHandler>();
+        services.AddScoped<CreateAnalyzeResultCommandHandler>();
 
         return services;
     }

@@ -29,8 +29,13 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("chunk_index");
+
                     b.Property<decimal>("Confidence")
-                        .HasColumnType("numeric")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("numeric(3,2)")
                         .HasColumnName("confidence");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -65,6 +70,10 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_analyze_results");
+
+                    b.HasIndex("SessionId", "ChunkIndex")
+                        .IsUnique()
+                        .HasDatabaseName("ix_analyze_results_session_id_chunk_index");
 
                     b.ToTable("analyze_results", (string)null);
                 });
